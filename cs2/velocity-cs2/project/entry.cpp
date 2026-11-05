@@ -23,6 +23,21 @@ namespace {
 		OutputDebugStringA( "[velocity] " );
 		OutputDebugStringA( msg );
 		OutputDebugStringA( "\n" );
+
+		// also write to %TEMP%\velocity_dev.log so failures are visible without a debugger
+		char path[ MAX_PATH ]{};
+		if ( GetTempPathA( MAX_PATH, path ) )
+		{
+			strcat_s( path, "velocity_dev.log" );
+			HANDLE f = CreateFileA( path, FILE_APPEND_DATA, FILE_SHARE_READ | FILE_SHARE_WRITE, nullptr, OPEN_ALWAYS, FILE_ATTRIBUTE_NORMAL, nullptr );
+			if ( f != INVALID_HANDLE_VALUE )
+			{
+				DWORD w{};
+				WriteFile( f, msg, static_cast< DWORD >( strlen( msg ) ), &w, nullptr );
+				WriteFile( f, "\r\n", 2, &w, nullptr );
+				CloseHandle( f );
+			}
+		}
 	}
 
 	#define INIT_FAIL( msg ) \
@@ -158,11 +173,7 @@ namespace {
 		}
 
 		{
-			if ( !hooks::vac::initialize( ) )
-			{
-				INIT_FAIL( "failed to initialize vac hooks." );
-			}
-
+			// vac diagnostic hooks disabled: build is for -insecure/offline use only
 			if ( !PROTECTION_CHECK( ) || !hooks::utility::initialize( ) )
 			{
 				INIT_FAIL( "failed to initialize utility hooks." );
