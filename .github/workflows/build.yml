@@ -19,26 +19,17 @@ jobs:
         shell: pwsh
         run: |
           $vsPath = & "${env:ProgramFiles(x86)}\Microsoft Visual Studio\Installer\vswhere.exe" -latest -property installationPath
-          echo "VS Path: $vsPath"
-          # Get installed LLVM version
           $llvmVer = (clang-cl --version 2>&1 | Select-String "clang version (\d+\.\d+\.\d+)").Matches[0].Groups[1].Value
           $llvmMajor = $llvmVer.Split('.')[0]
           echo "LLVM version: $llvmVer, major: $llvmMajor"
-          # Create symlink so MSBuild finds it
-          $src = "C:\Program Files\LLVM"
-          $dst = "$vsPath\VC\Tools\llvm\x64"
-          if (-not (Test-Path $dst)) { New-Item -ItemType Directory -Path $dst -Force }
-          # Copy clang libs into VS LLVM folder
           $clangLibSrc = "C:\Program Files\LLVM\lib\clang"
           $clangLibDst = "$vsPath\VC\Tools\llvm\x64\lib\clang"
           if (Test-Path $clangLibSrc) {
+            New-Item -ItemType Directory -Path $clangLibDst -Force | Out-Null
             Copy-Item -Path $clangLibSrc -Destination $clangLibDst -Recurse -Force
           }
-          # Patch vcxproj to use detected version
           $file = "cs2/velocity-cs2/velocity-cs2.vcxproj"
           (Get-Content $file) -replace '<LLVMToolsVersion>19</LLVMToolsVersion>', "<LLVMToolsVersion>$llvmMajor</LLVMToolsVersion>" | Set-Content $file
-          echo "Patched vcxproj LLVMToolsVersion to $llvmMajor"
-          # Also set toolset path
           $bin = Split-Path (Get-Command clang-cl).Source
           echo "LLVM_BIN=$bin" >> $env:GITHUB_ENV
           echo "LLVM_MAJOR=$llvmMajor" >> $env:GITHUB_ENV
@@ -58,6 +49,8 @@ jobs:
             /p:LinkToolExe=lld-link.exe `
             /p:LinkToolPath="$env:LLVM_BIN" `
             /p:LLVMInstallDir="C:\Program Files\LLVM" `
+            /p:UsePrecompiledHeader=false `
+            /p:PrecompiledHeader=NotUsing `
             /m /v:minimal
 
       - name: Find output DLL
