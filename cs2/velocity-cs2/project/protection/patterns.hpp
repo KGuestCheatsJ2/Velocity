@@ -1,7 +1,7 @@
 #ifndef PATTERNS_HPP
 #define PATTERNS_HPP
 
-namespace protection::addresses { struct address_t; }
+namespace protection::addresses { union address_t; }
 
 namespace patterns {
 
