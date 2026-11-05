@@ -527,11 +527,6 @@ namespace hooks {
 				}
 			} );
 
-		if ( settings::g_misc.m_removals.smoke.value )
-		{
-			return;
-		}
-
 		m_render_smoke.call<void>( a1, a2, a3, a4, a5, a6 );
 	}
 
@@ -581,20 +576,7 @@ namespace hooks {
 
 	void __fastcall cheat::draw_flash_effect( std::uintptr_t a1, int a2, std::uintptr_t* a3, std::uintptr_t a4, __m128* a5 )
 	{
-		if ( settings::g_misc.m_removals.flash_alpha.value < 100.0f && settings::g_misc.m_removals.flash_alpha.value != 0.0f )
-		{
-			const auto view_pawn = systems::g_local.get( ).view_pawn( );
-			if ( view_pawn )
-			{
-				const auto max = settings::g_misc.m_removals.flash_alpha.value / 100.0f * 255.0f;
-				memory::write<float>( view_pawn + SCHEMA( "C_CSPlayerPawnBase", "m_flFlashMaxAlpha"_hash ), max );
-			}
-		}
-
-		if ( settings::g_misc.m_removals.flash_alpha.value != 0.0f )
-		{
-			m_draw_flash_effect.call<void>( a1, a2, a3, a4, a5 );
-		}
+		m_draw_flash_effect.call<void>( a1, a2, a3, a4, a5 );
 	}
 
 } // namespace hooks

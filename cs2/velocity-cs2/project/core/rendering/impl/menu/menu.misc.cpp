@@ -120,8 +120,6 @@ namespace rendering {
 				xui::checkbox( "remove skybox fog", rem.skybox_fog );
 				xui::checkbox( "remove 3d skybox", rem.skybox_3d );
 				xui::checkbox( "remove decals", rem.decals );
-				xui::checkbox( "remove smoke", rem.smoke );
-				xui::slider_float( "flash alpha##flash", rem.flash_alpha, 0.0f, 100.0f, "%.0f%%" );
 
 				xui::end_child( );
 			}

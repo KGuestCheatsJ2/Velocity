@@ -28,19 +28,6 @@ namespace features::world {
 			return;
 		}
 
-		if ( settings::g_misc.m_removals.smoke.value )
-		{
-			const auto count = *reinterpret_cast< std::uint32_t* >( buf + 2464 );
-			if ( count > 0 && count <= 16 )
-			{
-				for ( auto i = 0u; i < count; ++i )
-				{
-					auto opacity = reinterpret_cast< float* >( buf + 1280 + 16 * static_cast< std::size_t >( i ) );
-					opacity[ 0 ] = 0.0f;
-				}
-			}
-		}
-
 		this->m_buf = 0;
 		this->m_token = 0;
 	}
