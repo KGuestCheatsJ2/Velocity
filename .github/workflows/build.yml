@@ -53,6 +53,12 @@ jobs:
             /p:PrecompiledHeader=NotUsing `
             /m /v:minimal
 
+      - name: Print DLL imports
+        shell: pwsh
+        run: |
+          $dll = Get-ChildItem -Recurse -Filter "velocity-cs2-dev.dll" | Select-Object -First 1
+          & "$env:LLVM_BIN\llvm-readobj.exe" --coff-imports $dll.FullName | Select-String "Name:" | Select-Object -First 40
+          "size: $($dll.Length)"
       - name: Find output DLL
         id: find_dll
         shell: pwsh
