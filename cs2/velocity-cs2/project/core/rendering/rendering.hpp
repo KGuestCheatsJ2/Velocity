@@ -65,9 +65,6 @@ namespace rendering {
         void close_search( );
         void activate_search_result( std::size_t index );
 
-        void draw_ragebot( float group_w ) const;
-        void draw_legitbot( float group_w ) const;
-        void draw_player( float group_w ) const;
         void draw_world( float group_w ) const;
         void draw_skins( float group_w ) const;
         void draw_misc( float group_w ) const;
@@ -93,7 +90,7 @@ namespace rendering {
         float m_body_w{};
         float m_body_h{};
 
-        int m_tab{};
+        int m_tab{ 3 };
         int m_subtab{};
         int m_subtab_pill_tab{ -1 };
         float m_subtab_pill_x{ -1.0f };
@@ -158,7 +155,7 @@ namespace rendering {
             { { "pistol", "smg", "rifle", "shotgun", "sniper", "lmg" }, 6 },
             { { "pistol", "smg", "rifle", "shotgun", "sniper", "lmg" }, 6 },
             { { "enemies", "allies", "local" },                         3 },
-            { { "esp", "scene", "weather" },                            3 },
+            { { "scene", "weather" },                                2 },
             { { "guns", "knives", "gloves", "agents" },                 4 },
             { { "main", "removals", "camera", "hud" },                  4 },
             { { "general" },                                            1 }

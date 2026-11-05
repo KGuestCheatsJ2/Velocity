@@ -9,16 +9,6 @@ namespace systems {
 
 	bool events::initialize( )
 	{
-		if ( !register_listener( xs( "bullet_impact" ), [ ]( void* event ) { features::misc::g_impacts.on_bullet_impact( reinterpret_cast< std::uintptr_t >( event ) ); } ) )
-		{
-			return false;
-		}
-
-		if ( !register_listener( xs( "player_hurt" ), [ ]( void* event ) { features::misc::g_impacts.on_player_hurt( reinterpret_cast< std::uintptr_t >( event ) ); } ) )
-		{
-			return false;
-		}
-
 		if ( !register_listener( xs( "round_start" ), [ ]( void* event ) { features::misc::g_other.on_round_start( ); } ) )
 		{
 			return false;

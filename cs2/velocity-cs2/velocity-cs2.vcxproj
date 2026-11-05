@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Development|x64">
@@ -140,51 +140,22 @@
     <ClCompile Include="project\core\features\changer\impl\guns.cpp" />
     <ClCompile Include="project\core\features\changer\impl\econ_item_system.cpp" />
     <ClCompile Include="project\core\features\changer\impl\knives.cpp" />
-    <ClCompile Include="project\core\features\combat\impl\extrapolation.cpp" />
-    <ClCompile Include="project\core\features\combat\impl\legit.cpp" />
-    <ClCompile Include="project\core\features\combat\impl\misc.cpp" />
-    <ClCompile Include="project\core\features\combat\impl\rage.cpp" />
-    <ClCompile Include="project\core\features\combat\impl\shared.cpp" />
-    <ClCompile Include="project\core\features\esp\item\item.chams.cpp" />
-    <ClCompile Include="project\core\features\esp\item\item.glow.cpp" />
-    <ClCompile Include="project\core\features\esp\item\item.overlay.cpp" />
-    <ClCompile Include="project\core\features\esp\other\other.overlay.cpp" />
-    <ClCompile Include="project\core\features\esp\player\player.chams.cpp" />
-    <ClCompile Include="project\core\features\esp\player\player.glow.cpp" />
-    <ClCompile Include="project\core\features\esp\player\player.overlay.cpp" />
-    <ClCompile Include="project\core\features\esp\projectile\projectile.tracers.cpp" />
-    <ClCompile Include="project\core\features\esp\projectile\projectile.overlay.cpp" />
     <ClCompile Include="project\core\features\misc\impl\camera.cpp" />
     <ClCompile Include="project\core\features\misc\impl\dlight.cpp" />
     <ClCompile Include="project\core\features\misc\impl\hud.cpp" />
-    <ClCompile Include="project\core\features\misc\impl\impacts.cpp" />
     <ClCompile Include="project\core\features\misc\impl\other.cpp" />
-    <ClCompile Include="project\core\features\misc\impl\projectile.trajectory.cpp" />
     <ClCompile Include="project\core\features\misc\impl\removals.cpp" />
     <ClCompile Include="project\core\features\misc\impl\scoreboard_weapons.cpp" />
-    <ClCompile Include="project\core\features\movement\impl\airstrafe.cpp" />
-    <ClCompile Include="project\core\features\movement\impl\test_strafer.cpp" />
-    <ClCompile Include="project\core\features\movement\impl\bunnyhop.cpp" />
-    <ClCompile Include="project\core\features\movement\impl\edgebug.cpp" />
-    <ClCompile Include="project\core\features\movement\impl\edgejump.cpp" />
-    <ClCompile Include="project\core\features\movement\impl\edgestop.cpp" />
-    <ClCompile Include="project\core\features\movement\impl\fastladder.cpp" />
-    <ClCompile Include="project\core\features\movement\impl\jumpbug.cpp" />
-    <ClCompile Include="project\core\features\movement\impl\slowwalk.cpp" />
     <ClCompile Include="project\core\features\world\impl\scene.cpp" />
     <ClCompile Include="project\core\features\world\impl\smoke.cpp" />
     <ClCompile Include="project\core\features\world\impl\weather.cpp" />
     <ClCompile Include="project\core\hooks\impl\cheat.cpp" />
     <ClCompile Include="project\core\hooks\impl\utility.cpp" />
-    <ClCompile Include="project\core\hooks\impl\vac.cpp" />
     <ClCompile Include="project\core\rendering\impl\context.cpp" />
     <ClCompile Include="project\core\rendering\impl\fonts.cpp" />
     <ClCompile Include="project\core\rendering\impl\menu\menu.config.cpp" />
     <ClCompile Include="project\core\rendering\impl\menu\menu.core.cpp" />
-    <ClCompile Include="project\core\rendering\impl\menu\menu.legitbot.cpp" />
     <ClCompile Include="project\core\rendering\impl\menu\menu.misc.cpp" />
-    <ClCompile Include="project\core\rendering\impl\menu\menu.player.cpp" />
-    <ClCompile Include="project\core\rendering\impl\menu\menu.ragebot.cpp" />
     <ClCompile Include="project\core\rendering\impl\menu\menu.skins.cpp" />
     <ClCompile Include="project\core\rendering\impl\menu\menu.world.cpp" />
     <ClCompile Include="project\core\rendering\impl\widgets.cpp" />
@@ -196,7 +167,6 @@
     <ClCompile Include="project\core\systems\impl\hitboxes.cpp" />
     <ClCompile Include="project\core\systems\impl\icons.cpp" />
     <ClCompile Include="project\core\systems\impl\input.cpp" />
-    <ClCompile Include="project\core\systems\impl\legit_input.cpp" />
     <ClCompile Include="project\core\systems\impl\local.cpp" />
     <ClCompile Include="project\core\systems\impl\materials.cpp" />
     <ClCompile Include="project\core\systems\impl\model_preview.cpp" />
@@ -251,9 +221,6 @@
     <ClCompile Include="project\utilities\overrides.cpp" />
     <ClCompile Include="project\utilities\proto\proto.cpp" />
     <ClCompile Include="project\utilities\random\random.cpp" />
-    <ClCompile Include="project\utilities\security\impl\integrity.cpp" />
-    <ClCompile Include="project\utilities\security\impl\prologues.cpp" />
-    <ClCompile Include="project\utilities\security\impl\regions.cpp" />
     <ClCompile Include="project\utilities\steam\impl\friends.cpp" />
     <ClCompile Include="project\utilities\steam\impl\http.cpp" />
     <ClCompile Include="project\utilities\steam\impl\utils.cpp" />
@@ -261,11 +228,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="project\core\features\changer\changer.hpp" />
-    <ClInclude Include="project\core\features\combat\combat.hpp" />
-    <ClInclude Include="project\core\features\esp\esp.hpp" />
     <ClInclude Include="project\core\features\features.hpp" />
     <ClInclude Include="project\core\features\misc\misc.hpp" />
-    <ClInclude Include="project\core\features\movement\movement.hpp" />
     <ClInclude Include="project\core\features\world\world.hpp" />
     <ClInclude Include="project\core\hooks\hooks.hpp" />
     <ClInclude Include="project\core\rendering\rendering.hpp" />
@@ -404,7 +368,6 @@
     <ClInclude Include="project\utilities\memory\memory.hpp" />
     <ClInclude Include="project\utilities\proto\proto.hpp" />
     <ClInclude Include="project\utilities\random\random.hpp" />
-    <ClInclude Include="project\utilities\security\security.hpp" />
     <ClInclude Include="project\utilities\steam\steam.hpp" />
     <ClInclude Include="project\utilities\threadpool\threadpool.hpp" />
   </ItemGroup>

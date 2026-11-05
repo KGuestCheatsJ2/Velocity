@@ -7,7 +7,6 @@
 #include <core/features/features.hpp>
 
 #include "../rendering.hpp"
-#include <utilities/security/security.hpp>
 
 namespace rendering {
 
@@ -265,135 +264,11 @@ namespace rendering {
 		bind_entry entries[ 32 ]{};
 		auto count{ 0 };
 
-		const auto& ctx = features::combat::g_shared.ctx( );
-		const auto has_weapon = ctx.valid && ctx.weapon_type >= cstypes::weapon_type::pistol && ctx.weapon_type <= cstypes::weapon_type::lmg;
-
 		for ( const auto setting : xui::binds::all( ) )
 		{
 			if ( !setting || setting->bind.key == 0 || !setting->bind.active || count >= 32 )
 			{
 				continue;
-			}
-
-			auto is_rage_group{ false };
-			for ( auto i = 0u; i < settings::combat::ragebot::k_group_count; ++i )
-			{
-				const auto& g = settings::g_combat.m_ragebot.groups[ i ];
-				if ( setting == &g.min_damage_override || setting == &g.hitchance_override || setting == &g.force_shot || setting == &g.force_shot_air || setting == &g.body_aim || setting == &g.silent || setting == &g.no_spread )
-				{
-					is_rage_group = true;
-					break;
-				}
-			}
-
-			if ( is_rage_group )
-			{
-				if ( !settings::g_combat.m_ragebot.enabled || !has_weapon )
-				{
-					continue;
-				}
-
-				const auto active_group = &settings::g_combat.m_ragebot.get_group( ctx.weapon_type );
-				auto is_active{ false };
-
-				for ( auto i = 0u; i < settings::combat::ragebot::k_group_count; ++i )
-				{
-					const auto& g = settings::g_combat.m_ragebot.groups[ i ];
-					if ( &g == active_group )
-					{
-						if ( setting == &g.min_damage_override || setting == &g.hitchance_override || setting == &g.force_shot || setting == &g.force_shot_air || setting == &g.body_aim )
-						{
-							is_active = true;
-						}
-						break;
-					}
-				}
-
-				if ( !is_active )
-				{
-					continue;
-				}
-
-				auto& e = entries[ count++ ];
-				e.name = setting->name.c_str( );
-				e.mode = setting->bind.mode;
-
-				if ( setting == &active_group->min_damage_override )
-				{
-					std::snprintf( e.value, sizeof( e.value ), "%d", active_group->min_damage_override_value.value );
-					e.has_value_pill = true;
-				}
-				else if ( setting == &active_group->hitchance_override )
-				{
-					std::snprintf( e.value, sizeof( e.value ), "%d%%", active_group->hitchance_override_value.value );
-					e.has_value_pill = true;
-				}
-				else
-				{
-					e.value[ 0 ] = '\0';
-					e.has_value_pill = false;
-				}
-				continue;
-			}
-
-			auto is_legit_group{ false };
-			for ( auto i = 0u; i < settings::combat::legitbot::k_group_count; ++i )
-			{
-				const auto& g = settings::g_combat.m_legitbot.groups[ i ];
-				if ( setting == &g.aimbot || setting == &g.rcs || setting == &g.standalone_rcs || setting == &g.triggerbot || setting == &g.autowall || setting == &g.visualize_fov || setting == &g.trigger_head_only || setting == &g.give_me_your_seed )
-				{
-					is_legit_group = true;
-					break;
-				}
-			}
-
-			if ( is_legit_group )
-			{
-				if ( !settings::g_combat.m_legitbot.enabled.value || !has_weapon )
-				{
-					continue;
-				}
-
-				const auto* active_group = &settings::g_combat.m_legitbot.get_group( ctx.weapon_type );
-				auto is_active{ false };
-
-				for ( auto i = 0u; i < settings::combat::legitbot::k_group_count; ++i )
-				{
-					if ( &settings::g_combat.m_legitbot.groups[ i ] == active_group )
-					{
-						const auto& g = settings::g_combat.m_legitbot.groups[ i ];
-						if ( setting == &g.aimbot || setting == &g.rcs || setting == &g.standalone_rcs || setting == &g.triggerbot || setting == &g.autowall || setting == &g.visualize_fov || setting == &g.trigger_head_only || setting == &g.give_me_your_seed )
-						{
-							is_active = true;
-						}
-
-						if ( is_active && setting == &active_group->give_me_your_seed && !active_group->triggerbot.value )
-						{
-							is_active = false;
-						}
-						break;
-					}
-				}
-
-				if ( !is_active )
-				{
-					continue;
-				}
-
-				auto& e = entries[ count++ ];
-				e.name = setting->name.c_str( );
-				e.mode = setting->bind.mode;
-				e.value[ 0 ] = '\0';
-				e.has_value_pill = false;
-				continue;
-			}
-
-			if ( setting == &settings::g_combat.m_antiaim.enabled || setting == &settings::g_combat.m_antiaim.at_targets || setting == &settings::g_combat.m_antiaim.manual_left || setting == &settings::g_combat.m_antiaim.manual_right || setting == &settings::g_combat.m_antiaim.hide_shots || setting == &settings::g_combat.m_antiaim.avoid_backstab || setting == &settings::g_combat.m_antiaim.direction_indicator )
-			{
-				if ( !settings::g_combat.m_antiaim.enabled.value )
-				{
-					continue;
-				}
 			}
 
 			auto& e = entries[ count++ ];

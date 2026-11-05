@@ -2,7 +2,6 @@
 #include <utilities/memory/memory.hpp>
 #include <utilities/addresses/addresses.hpp>
 #include <core/settings.hpp>
-#include <utilities/security/security.hpp>
 #include <external/config.hpp>
 #include <core/systems/systems.hpp>
 
@@ -60,15 +59,11 @@ namespace rendering {
 
 			if ( category_lower.find( "scene" ) != std::string::npos )
 			{
-				return { 3, 1 };
+				return { 3, 0 };
 			}
 			if ( category_lower.find( "weather" ) != std::string::npos )
 			{
-				return { 3, 2 };
-			}
-			if ( category_lower.find( "world" ) != std::string::npos || category_lower.find( "projectile" ) != std::string::npos || category_lower.find( "item" ) != std::string::npos || category_lower.find( "bomb" ) != std::string::npos || category_lower.find( "spectator" ) != std::string::npos )
-			{
-				return { 3, 0 };
+				return { 3, 1 };
 			}
 
 			if ( category_lower.find( "knife" ) != std::string::npos )
@@ -995,6 +990,10 @@ namespace rendering {
 			entry.name_lower = detail::to_lower_copy( entry.name );
 			entry.category_lower = detail::to_lower_copy( entry.category );
 			std::tie( entry.tab, entry.subtab ) = detail::map_category_to_tab( entry.category_lower );
+			if ( entry.tab < 3 )
+			{
+				continue;
+			}
 			entry.bind_key = setting->bind.key;
 
 			this->m_search_entries.emplace_back( std::move( entry ) );
@@ -1016,7 +1015,7 @@ namespace rendering {
 		}
 
 		const auto& chosen = this->m_search_entries[ this->m_search_visible_indices[ index ] ];
-		this->m_tab = std::clamp( chosen.tab, 0, 6 );
+		this->m_tab = std::clamp( chosen.tab, 3, 6 );
 		this->m_subtab = std::clamp( chosen.subtab, 0, k_subtab_defs[ this->m_tab ].count - 1 );
 		xui::set_highlight_target( chosen.name, 1.2f );
 		this->close_search( );
@@ -1383,9 +1382,6 @@ namespace rendering {
 
 			switch ( this->m_tab )
 			{
-			case 0: this->draw_ragebot( col_w ); break;
-			case 1: this->draw_legitbot( col_w ); break;
-			case 2: this->draw_player( col_w ); break;
 			case 3: this->draw_world( col_w ); break;
 			case 4: this->draw_skins( col_w ); break;
 			case 5: this->draw_misc( col_w ); break;
@@ -1484,10 +1480,12 @@ namespace rendering {
 		const auto icon_pad{ 4.0f };
 		const auto icon_stride = tokens::tab_icon_size + 4.0f;
 
-		for ( auto i = 0; i < tab_count; ++i )
+		// tabs 0..2 (combat/player) no longer exist in this build; only the cosmetic tabs are shown
+		constexpr auto first_tab{ 3 };
+		for ( auto i = first_tab; i < tab_count; ++i )
 		{
 			const auto ix = sb_x + ( tokens::sidebar_w - tokens::tab_icon_size ) * 0.5f;
-			const auto iy = tabs_y + icon_pad + i * icon_stride;
+			const auto iy = tabs_y + icon_pad + ( i - first_tab ) * icon_stride;
 			const auto btn = xui::rect{ ix, iy, tokens::tab_icon_size, tokens::tab_icon_size };
 
 			const auto hovered = input.in_rect( btn );

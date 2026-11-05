@@ -100,18 +100,7 @@ namespace rendering {
 			if ( this->m_ui_assets_ready && systems::g_local.get( ).is_valid( ) && systems::g_view.has_camera( ) )
 			{
 				features::misc::g_dlight.on_present( );
-				features::misc::g_impacts.on_render_early( dl );
-				features::combat::g_misc.antiaim( ).on_render( dl );
-				features::movement::g_edgebug.on_render( dl );
-				features::esp::item::g_overlay.on_render( dl );
-				features::esp::projectile::g_overlay.on_render( dl, xdraw::get( xdraw::layer::middle ) );
-				features::esp::player::g_overlay.on_render( dl );
-				features::misc::g_projectile_trajectory.on_render( dl );
-				features::combat::g_rage.on_render( dl );
-				features::combat::g_legit.on_render( dl );
-				features::misc::g_impacts.on_render( dl );
 				features::misc::g_hud.on_render( dl );
-				features::esp::other::g_overlay.on_render( dl );
 			}
 
 			if ( this->m_ui_assets_ready )

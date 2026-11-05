@@ -3,7 +3,6 @@
 #include <utilities/addresses/addresses.hpp>
 #include <utilities/hooking/hooking.hpp>
 #include <utilities/logging/logging.hpp>
-#include <utilities/security/security.hpp>
 #include <core/rendering/rendering.hpp>
 #include <core/systems/systems.hpp>
 #include <core/features/features.hpp>
@@ -18,8 +17,6 @@ namespace hooks {
 			{ &m_resize_buffers, &resize_buffers, xs ("resize_buffers"), addresses::functions::resize_buffers },
 			{ &m_cmd_interpreter, &cmd_interpreter, xs ("cmd_interpreter"), PATTERN (patterns::cmd_interpreter) },
 			{ &m_frame_stage_notify, &frame_stage_notify, xs ("frame_stage_notify"), PATTERN (patterns::frame_stage_notify) },
-			{ &m_create_move, &create_move, xs ("create_move"), PATTERN (patterns::create_move) },
-			{ &m_handle_view_angles, &handle_view_angles, xs ("handle_view_angles"), PATTERN (patterns::handle_view_angles) },
 			{ &m_add_entity, &add_entity, xs ("add_entity"), PATTERN (patterns::add_entity) },
 			{ &m_remove_entity, &remove_entity, xs ("remove_entity"), PATTERN (patterns::remove_entity) },
 			{ &m_render_view, &render_view, xs ("render_view"), PATTERN (patterns::render_view) },
@@ -30,7 +27,6 @@ namespace hooks {
 			{ &m_is_glowing, &is_glowing, xs ("is_glowing"), PATTERN (patterns::is_glowing) },
 			{ &m_get_glow_color, &get_glow_color, xs ("get_glow_color"), PATTERN (patterns::get_glow_color) },
 			{ &m_generate_primitives, &generate_primitives, xs ("generate_primitives"), PATTERN (patterns::generate_primitives) },
-			{ &m_parse_report_hit, &parse_report_hit, xs ("parse_report_hit"), PATTERN (patterns::parse_report_hit) },
 			{ &m_get_scene_param, &get_scene_param, xs ("get_scene_param"), PATTERN (patterns::get_scene_param) },
 			{ &m_set_shader_param, &set_shader_param, xs ("set_shader_param"), PATTERN (patterns::set_shader_param) },
 			{ &m_override_view, &override_view, xs ("override_view"), PATTERN (patterns::override_view) },
@@ -41,15 +37,8 @@ namespace hooks {
 			{ &m_post_network_data_received, &post_network_data_received, xs ("post_network_data_received"), PATTERN (patterns::post_network_data_received) },
 			{ &m_draw_overhead, &draw_overhead, xs ("draw_overhead"), PATTERN (patterns::draw_overhead) },
 			{ &m_draw_legs, &draw_legs, xs ("draw_legs"), PATTERN (patterns::draw_legs) },
-			{ &m_is_enemy_on_radar, &is_enemy_on_radar, xs ("is_enemy_on_radar"), PATTERN (patterns::is_enemy_on_radar) },
-			{ &m_get_transforms_for_hitbox_list, &get_transforms_for_hitbox_list, xs ("get_transforms_for_hitbox_list"), PATTERN (patterns::get_transforms_for_hitbox_list) },
-			{ &m_sort_primitives, &sort_primitives, xs ("sort_primitives"), PATTERN (patterns::sort_primitives) },
-			{ &m_get_inaccuracy, &get_inaccuracy, xs ("get_inaccuracy"), PATTERN (patterns::get_inaccuracy) },
-			{ &m_get_interpolated_shoot_position, &get_interpolated_shoot_position, xs ("get_interpolated_shoot_position"), PATTERN (patterns::get_interpolated_shoot_position) },
 			{ &m_level_initialization, &level_initialization, xs ("level_initialization"), PATTERN (patterns::level_initialization) },
 			{ &m_level_shutdown, &level_shutdown, xs ("level_shutdown"), PATTERN (patterns::level_shutdown) },
-			{ &m_read_frame_input, &read_frame_input, xs ("read_frame_input"), PATTERN (patterns::read_frame_input) },
-			{ &m_process_input_event, &process_input_event, xs ("process_input_event"), PATTERN (patterns::process_input_event) },
 			{ &m_render_decals, &render_decals, xs ("render_decals"), PATTERN (patterns::render_decals) },
 			{ &m_render_smoke, &render_smoke, xs ("render_smoke"), PATTERN (patterns::render_smoke) },
 			{ &m_draw_flash_effect, &draw_flash_effect, xs ("draw_flash_effect"), PATTERN (patterns::draw_flash_effect) },
@@ -69,8 +58,6 @@ namespace hooks {
 		m_resize_buffers.reset( );
 		m_cmd_interpreter.reset( );
 		m_frame_stage_notify.reset( );
-		m_create_move.reset( );
-		m_handle_view_angles.reset( );
 		m_add_entity.reset( );
 		m_remove_entity.reset( );
 		m_render_view.reset( );
@@ -81,7 +68,6 @@ namespace hooks {
 		m_is_glowing.reset( );
 		m_get_glow_color.reset( );
 		m_generate_primitives.reset( );
-		m_parse_report_hit.reset( );
 		m_get_scene_param.reset( );
 		m_set_shader_param.reset( );
 		m_override_view.reset( );
@@ -92,14 +78,7 @@ namespace hooks {
 		m_post_network_data_received.reset( );
 		m_draw_overhead.reset( );
 		m_draw_legs.reset( );
-		m_is_enemy_on_radar.reset( );
-		m_get_transforms_for_hitbox_list.reset( );
-		m_sort_primitives.reset( );
-		m_get_inaccuracy.reset( );
-		m_get_interpolated_shoot_position.reset( );
 		m_level_initialization.reset( );
-		m_read_frame_input.reset( );
-		m_process_input_event.reset( );
 		m_render_decals.reset( );
 		m_render_smoke.reset( );
 		m_render_smoke_map.reset( );
@@ -208,9 +187,6 @@ namespace hooks {
 			if ( stage == 6 )
 			{
 				features::changer::g_guns.on_frame_stage_notify( );
-				features::combat::g_shared.lc( ).run( );
-				features::esp::player::g_chams.bt( ).update( );
-				features::esp::player::g_chams.os ().update ();
 
 				features::misc::g_scoreboard_weapons.on_frame_stage_notify ();
 
@@ -225,7 +201,6 @@ namespace hooks {
 				features::world::g_scene.on_frame_stage_notify( );
 				features::world::g_weather.on_frame_stage_notify( );
 				features::misc::g_other.on_frame_stage_notify( );
-				features::misc::g_impacts.on_frame_stage_notify( );
 
 				
 			}
@@ -253,105 +228,13 @@ namespace hooks {
 
 	void __fastcall cheat::create_move( std::uintptr_t thisptr, int slot, bool active )
 	{
-		const auto local = systems::g_local.get( );
-
-		if ( !local.pawn || !local.controller )
-		{
-			return m_create_move.call<void>( thisptr, slot, active );
-		}
-
-		const auto cmd = systems::g_input.get_current_cmd( local.controller );
-		if ( cmd && systems::g_input.is_subtick_overwrite( cmd ) )
-		{
-			systems::g_input.set_weapon_select( cmd, thisptr );
-			return;
-		}
-
+		// cosmetic-only build: user commands are passed through untouched
 		m_create_move.call<void>( thisptr, slot, active );
-
-		{
-			features::combat::g_shared.invalidate_if_needed( );
-			features::combat::g_legit.invalidate_if_needed( );
-			features::combat::g_misc.quickpeek( ).reset_if_needed( );
-		}
-
-		if ( !local.is_alive || !systems::g_view.has_camera( ) )
-		{
-			return;
-		}
-
-		const auto movement_services = memory::read<std::uintptr_t>( local.pawn + SCHEMA( "C_BasePlayerPawn", "m_pMovementServices"_hash ) );
-		if ( !movement_services )
-		{
-			return;
-		}
-
-		const auto last_cmd_processed = memory::read<std::uint32_t>( movement_services + SCHEMA( "CPlayer_MovementServices", "m_nLastCommandNumberProcessed"_hash ) );
-		if ( !last_cmd_processed )
-		{
-			return;
-		}
-
-		systems::g_input.update( );
-		{
-			const auto current_cmd = systems::g_input.get( );
-			if ( !current_cmd || !current_cmd->csgo_user_cmd.has_base( ) )
-			{
-				return;
-			}
-
-			systems::g_input.desubtick( current_cmd );
-			systems::g_prediction.capture_prestate( local.pawn, movement_services );
-
-			{
-				features::movement::g_airstrafe.store_angles( );
-				features::combat::g_shared.update( );
-
-				features::combat::g_misc.antiaim( ).on_create_move( current_cmd );
-				features::combat::g_misc.autostop( ).on_create_move( current_cmd );
-			}
-
-			{
-				features::movement::g_slowwalk.on_create_move( current_cmd );
-				features::movement::g_edgebug.on_create_move( current_cmd );
-				features::movement::g_edgejump.on_create_move( current_cmd );
-				features::movement::g_edgestop.on_create_move( current_cmd );
-				features::movement::g_jumpbug.on_create_move( current_cmd );
-				features::movement::g_bhop.on_create_move( current_cmd );
-				features::movement::g_fastladder.on_create_move( current_cmd );
-
-				{
-					features::combat::g_rage.on_create_move( current_cmd );
-					features::combat::g_legit.on_create_move( current_cmd );
-				}
-
-				features::combat::g_misc.duckpeek( ).on_create_move( current_cmd );
-				features::movement::g_test_strafer.on_create_move( current_cmd );
-				features::movement::g_airstrafe.on_create_move( current_cmd );
-				features::misc::g_projectile_trajectory.on_create_move( current_cmd );
-			}
-
-			features::combat::g_misc.quickpeek( ).on_create_move( current_cmd );
-
-			if ( current_cmd->csgo_user_cmd.base( )->subtick_moves( ).size( ) > 0
-				&& !features::movement::g_test_strafer.handled_this_tick( ) )
-			{
-				current_cmd->csgo_user_cmd.mutable_base( )->set_forwardmove( 0.0f );
-				current_cmd->csgo_user_cmd.mutable_base( )->set_leftmove( 0.0f );
-			}
-
-			//systems::g_legit_input.on_create_move( current_cmd );
-		}
-		systems::g_input.apply( );
 	}
 
 	void __fastcall cheat::handle_view_angles( std::uintptr_t thisptr, int a2 )
 	{
-		const auto view_angles = systems::g_input.get_view_angles( );
-
 		m_handle_view_angles.call<void>( thisptr, a2 );
-
-		systems::g_input.set_view_angles( view_angles );
 	}
 
 	void __fastcall cheat::add_entity( std::uintptr_t thisptr, std::uintptr_t entity, std::uint32_t handle )
@@ -414,53 +297,11 @@ namespace hooks {
 
 	bool __fastcall cheat::is_glowing( std::uintptr_t glow_property )
 	{
-		if ( glow_property )
-		{
-			const auto owner_entity = memory::read<std::uintptr_t>( glow_property + 0x18 );
-			if ( owner_entity )
-			{
-				const auto owner_hash = fnv1a::runtime_hash( systems::g_entities.get_schema_name( owner_entity ) );
-				if ( owner_hash )
-				{
-					if ( features::esp::player::g_glow.on_is_glowing( owner_entity, owner_hash ) )
-					{
-						return true;
-					}
-
-					if ( features::esp::item::g_glow.on_is_glowing( owner_entity, owner_hash ) )
-					{
-						return true;
-					}
-				}
-			}
-		}
-
 		return m_is_glowing.call<bool>( glow_property );
 	}
 
 	void __fastcall cheat::get_glow_color( std::uintptr_t glow_property, float* color )
 	{
-		if ( glow_property )
-		{
-			const auto owner_entity = memory::read<std::uintptr_t>( glow_property + 0x18 );
-			if ( owner_entity )
-			{
-				const auto owner_hash = fnv1a::runtime_hash( systems::g_entities.get_schema_name( owner_entity ) );
-				if ( owner_hash )
-				{
-					if ( features::esp::player::g_glow.on_get_glow_color( owner_entity, owner_hash, color ) )
-					{
-						return;
-					}
-
-					if ( features::esp::item::g_glow.on_get_glow_color( owner_entity, owner_hash, color ) )
-					{
-						return;
-					}
-				}
-			}
-		}
-
 		m_get_glow_color.call<void>( glow_property, color );
 	}
 
@@ -468,16 +309,6 @@ namespace hooks {
 	{
 		if ( scene_object )
 		{
-			if ( features::esp::player::g_chams.bt( ).is_active( scene_object ) )
-			{
-				return;
-			}
-
-			if ( features::esp::player::g_chams.os( ).is_active( scene_object ) ) 
-			{
-				return;
-			}
-
 			const auto owner_handle = memory::read<std::uint32_t>( scene_object + 0xc0 );
 			if ( owner_handle )
 			{
@@ -487,16 +318,6 @@ namespace hooks {
 					const auto owner_hash = fnv1a::runtime_hash( systems::g_entities.get_schema_name( owner_entity ) );
 					if ( owner_hash )
 					{
-						if ( features::esp::player::g_chams.on_generate_primitives( owner_entity, owner_hash, scene_object, primitive_buffer, m_generate_primitives.original<void( __fastcall* )( std::uintptr_t, std::uintptr_t, std::uintptr_t, std::uintptr_t )>( ), thisptr, scene_view ) )
-						{
-							return;
-						}
-
-						if ( features::esp::item::g_chams.on_generate_primitives( owner_entity, owner_hash, scene_object, primitive_buffer, m_generate_primitives.original<void( __fastcall* )( std::uintptr_t, std::uintptr_t, std::uintptr_t, std::uintptr_t )>( ), thisptr, scene_view ) )
-						{
-							return;
-						}
-
 						systems::g_model_preview.on_generate_primitives(
 							owner_entity,
 							owner_hash,
@@ -518,7 +339,6 @@ namespace hooks {
 	{
 		const auto result = m_parse_report_hit.call<std::uintptr_t>( thisptr, a2, a3 );
 
-		features::misc::g_impacts.on_report_hit( thisptr );
 
 		return result;
 	}
@@ -545,7 +365,6 @@ namespace hooks {
 
 		features::misc::g_camera.on_override_view( view_setup );
 		features::misc::g_removals.on_override_view( view_setup );
-		features::combat::g_misc.duckpeek( ).on_override_view( view_setup );
 	}
 
 	void __fastcall cheat::update_fov_sensitivity( std::uintptr_t thisptr )
@@ -609,111 +428,24 @@ namespace hooks {
 
 	char __fastcall cheat::is_enemy_on_radar( std::uintptr_t a1, std::uintptr_t a2 )
 	{
-		if ( settings::g_misc.reveal_radar.value )
-		{
-			return 0;
-		}
-
 		return m_is_enemy_on_radar.call<char>( a1, a2 );
 	}
 
 	bool __fastcall cheat::get_transforms_for_hitbox_list( std::uintptr_t a1, std::uintptr_t a2, int* a3 )
 	{
-		if ( !features::combat::g_shared.autowalling( ) )
-		{
-			return m_get_transforms_for_hitbox_list.call<bool>( a1, a2, a3 );
-		}
-
-		const auto record = features::combat::g_shared.current_autowall_record( );
-		if ( !record || !record->valid || !record->is_applied )
-		{
-			return m_get_transforms_for_hitbox_list.call<bool>( a1, a2, a3 );
-		}
-
-		const auto entity_bone_cache = memory::safe_read<std::uintptr_t>( a1 + 480 ).value_or( 0 );
-		const auto target_scene = record->game_scene_node ? record->game_scene_node : memory::read<std::uintptr_t>( record->pawn + SCHEMA( "C_BaseEntity", "m_pGameSceneNode"_hash ) );
-		const auto target_bone_cache = target_scene ? memory::safe_read<std::uintptr_t>( target_scene + SCHEMA( "CSkeletonInstance", "m_modelState"_hash ) + 0x80 ).value_or( 0 ) : 0;
-		const auto result = m_get_transforms_for_hitbox_list.call<bool>( a1, a2, a3 );
-
-		if ( !result )
-		{
-			return false;
-		}
-
-		const auto is_plausible = [ ]( std::uintptr_t ptr ) noexcept -> bool
-			{
-				return ptr >= 0x10000ull && ptr < 0x00007FFFFFFFFFFFull;
-			};
-
-		if ( !is_plausible( entity_bone_cache ) || !is_plausible( target_bone_cache ) || entity_bone_cache != target_bone_cache )
-		{
-			return result;
-		}
-
-		const auto count = *a3;
-		const auto output_array = memory::read<std::uintptr_t>( a2 + 16 );
-
-		if ( !output_array || count <= 0 )
-		{
-			return result;
-		}
-
-		const auto skeleton_ptr_ptr = memory::read<std::uintptr_t>( a1 + 512 );
-		if ( !skeleton_ptr_ptr )
-		{
-			return result;
-		}
-
-		const auto skeleton_ptr = memory::read<std::uintptr_t>( skeleton_ptr_ptr );
-		if ( !skeleton_ptr )
-		{
-			return result;
-		}
-
-		const auto shape_array = memory::read<std::uintptr_t>( reinterpret_cast< std::uintptr_t >( a3 ) + 8 );
-		if ( !shape_array )
-		{
-			return result;
-		}
-
-		for ( auto i = 0; i < count; ++i )
-		{
-			const auto shape_ptr = shape_array + 16ull * i;
-			const auto bone_index = memory::call<int>(PATTERN (patterns::get_bone_index), skeleton_ptr, shape_ptr );
-
-			if ( bone_index < 0 || bone_index >= record->bone_count )
-			{
-				continue;
-			}
-
-			const auto dst = output_array + 32ull * i;
-			std::memcpy( reinterpret_cast< void* >( dst ), &record->bones[ bone_index ], 32 );
-		}
-
-		return true;
+		return m_get_transforms_for_hitbox_list.call<bool>( a1, a2, a3 );
 	}
 
 	void __fastcall cheat::sort_primitives( std::uintptr_t thisptr, std::uintptr_t a2, std::uintptr_t a3, std::uint32_t a4 )
 	{
 		m_sort_primitives.call<void>( thisptr, a2, a3, a4 );
 
-		features::esp::player::g_chams.on_sort_primitives( a3, a4 );
 	}
 
 	float __fastcall cheat::get_inaccuracy( std::uintptr_t thisptr, float* a2, float* a3 )
 	{
 		const auto result = m_get_inaccuracy.call<float>( thisptr, a2, a3 );
 
-#if defined(__clang__) || defined(__GNUC__)
-		const auto result_address = reinterpret_cast< std::uintptr_t >( __builtin_return_address( 0 ) );
-#else
-		const auto result_address = reinterpret_cast< std::uintptr_t >( _ReturnAddress( ) );
-#endif
-
-		if ( result_address > PATTERN (patterns::base_fire_guns_get_inaccuracy) && result_address < PATTERN (patterns::base_fire_guns_get_inaccuracy) + 0x600 )
-		{
-			features::misc::g_impacts.on_base_fire_guns_get_inaccuracy( thisptr, result );
-		}
 
 		return result;
 	}
@@ -722,7 +454,6 @@ namespace hooks {
 	{
 		const auto result = m_get_interpolated_shoot_position.call<float*>( thisptr, out, tick_frac );
 
-		features::misc::g_impacts.on_get_interpolated_shoot_position( thisptr, out );
 
 		return result;
 	}
@@ -740,7 +471,6 @@ namespace hooks {
 		}
 
 		features::world::g_scene.reset_skybox_state( );
-		features::misc::g_impacts.on_level_change( );
 		features::misc::g_scoreboard_weapons.on_level_change( );
 
 		return m_level_initialization.call<std::uintptr_t>( a1, new_map );
@@ -763,7 +493,6 @@ namespace hooks {
 
 	void __fastcall cheat::process_input_event( std::uintptr_t csgo_input, int slot, float frametime )
 	{
-		systems::g_legit_input.on_process_input_event( csgo_input, slot );
 		m_process_input_event.call<void>( csgo_input, slot, frametime );
 	}
 

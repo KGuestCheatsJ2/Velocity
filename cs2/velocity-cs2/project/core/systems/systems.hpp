@@ -142,30 +142,6 @@ namespace systems {
 		bool calculate_crc( proto::base_usercmd_pb* base ) const;
 	};
 
-	class legit_input
-	{
-	public:
-		//void press( std::uintptr_t button_bit, float when = -1.0f );
-		//void release( std::uintptr_t button_bit, float when = -1.0f );
-		void add_mouse_delta( float pitch_degrees, float yaw_degrees );
-
-		//void on_create_move( input::usercmd* cmd );
-		void on_process_input_event( std::uintptr_t csgo_input, int slot );
-
-	private:
-		//[[nodiscard]] float resolve_when( ) const;
-
-		bool m_pending_press{};
-		bool m_pending_release{};
-		std::uintptr_t m_press_button{};
-		std::uintptr_t m_release_button{};
-		float m_press_when{ -1.0f };
-		float m_release_when{ -1.0f };
-
-		float m_pending_pitch{};
-		float m_pending_yaw{};
-	};
-
 	class entities
 	{
 	public:
@@ -631,7 +607,6 @@ namespace systems {
 	};
 
 	inline input g_input{};
-	inline legit_input g_legit_input{};
 	inline entities g_entities{};
 	inline local g_local{};
 	inline prediction g_prediction{};

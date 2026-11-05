@@ -4,7 +4,6 @@
 
 #include <utilities/logging/logging.hpp>
 #include <utilities/addresses/addresses.hpp>
-#include <utilities/security/security.hpp>
 #include <utilities/memory/memory.hpp>
 #include <utilities/threadpool/threadpool.hpp>
 #include <utilities/bootstrap/bootstrap.hpp>
@@ -111,8 +110,6 @@ namespace {
 		STAGE( "bootstrap::on_dll_attach" );
 		bootstrap::on_dll_attach( );
 
-		STAGE( "security::regions::add_module" );
-		security::regions::add_module( module_handle );
 
 		{
 			STAGE( "logging::console::initialize" );
@@ -272,8 +269,6 @@ extern "C" int __stdcall entry( HMODULE module_handle, DWORD reason, LPVOID rese
 	else if ( reason == DLL_PROCESS_DETACH )
 	{
 		_CRT_INIT( module_handle, reason, reserved );
-		features::esp::player::g_chams.bt( ).shutdown( );
-		features::esp::player::g_chams.os( ).shutdown( );
 
 		features::world::g_weather.release( );
 		rendering::g_menu.shutdown( );

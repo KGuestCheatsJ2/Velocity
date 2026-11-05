@@ -19,12 +19,25 @@ namespace logging::console {
 	} // namespace detail
 
 	bool initialize () {
-		detail::log_direct_color = memory::get_module_export (MODULE_BASE ("tier0.dll"), static_cast<std::uint16_t> (947)); // LoggingSystem_Log(int,LoggingSeverity_t,Color,char const *,...)	000000018012EA10	947
+		// resolve by name: ordinals shift between game updates and caused a crash inside tier0
+		// (direct GetProcAddress on purpose, so a failure here can never recurse into logging)
+		const auto tier0 = GetModuleHandleA ("tier0.dll");
+		if (!tier0) {
+			return false;
+		}
+
+		detail::log_direct_color = reinterpret_cast<std::uintptr_t>(GetProcAddress (tier0, "LoggingSystem_Log"));
 		if (!detail::log_direct_color) {
 			return false;
 		}
 
-		detail::log_general = *reinterpret_cast<int*>(MODULE_EXPORT ("tier0.dll:LOG_GENERAL"));
+		const auto log_general = reinterpret_cast<const int*>(GetProcAddress (tier0, "LOG_GENERAL"));
+		if (!log_general) {
+			detail::log_direct_color = 0;
+			return false;
+		}
+
+		detail::log_general = *log_general;
 
 		return true;
 	}

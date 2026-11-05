@@ -60,9 +60,6 @@
     <ClCompile Include="project\core\hooks\impl\utility.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="project\core\hooks\impl\vac.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="project\utilities\logging\impl\console.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -70,15 +67,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="project\utilities\hooking\impl\manager.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="project\utilities\security\impl\integrity.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="project\utilities\security\impl\regions.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="project\utilities\security\impl\prologues.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="project\core\systems\impl\materials.cpp">
@@ -120,21 +108,6 @@
     <ClCompile Include="project\core\features\world\impl\scene.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="project\core\features\movement\impl\airstrafe.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="project\core\features\movement\impl\test_strafer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="project\core\features\movement\impl\bunnyhop.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="project\core\features\movement\impl\jumpbug.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="project\core\features\misc\impl\impacts.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="project\core\rendering\impl\fonts.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -147,27 +120,6 @@
     <ClCompile Include="project\core\features\misc\impl\hud.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="project\core\features\misc\impl\projectile.trajectory.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="project\core\features\esp\player\player.overlay.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="project\core\features\esp\player\player.chams.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="project\core\features\esp\player\player.glow.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="project\core\features\combat\impl\shared.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="project\core\features\combat\impl\rage.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="project\core\features\combat\impl\misc.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="project\utilities\threadpool\threadpool.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -175,18 +127,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="project\core\rendering\impl\widgets.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="project\core\features\movement\impl\fastladder.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="project\core\features\esp\item\item.chams.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="project\core\features\esp\item\item.overlay.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="project\core\features\esp\item\item.glow.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="project\external\xdraw\xui\xui.cpp">
@@ -201,43 +141,16 @@
     <ClCompile Include="project\utilities\proto\proto.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="project\core\features\combat\impl\legit.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="project\core\features\movement\impl\edgejump.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="project\core\features\movement\impl\edgestop.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="project\core\features\misc\impl\other.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="project\core\features\movement\impl\edgebug.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="project\core\systems\impl\frame_data.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="project\core\features\movement\impl\slowwalk.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="project\core\features\esp\projectile\projectile.tracers.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="project\core\features\esp\projectile\projectile.overlay.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="project\core\systems\impl\icons.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="project\core\systems\impl\legit_input.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="project\utilities\random\random.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="project\core\features\esp\other\other.overlay.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="project\utilities\steam\impl\friends.cpp">
@@ -267,13 +180,6 @@
     <ClCompile Include="project\core\rendering\impl\menu\menu.core.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="project\core\rendering\impl\menu\menu.ragebot.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="project\core\rendering\impl\menu\menu.legitbot.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="project\core\rendering\impl\menu\menu.player.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="project\core\rendering\impl\menu\menu.world.cpp">
@@ -307,9 +213,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="project\protection\patterns.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="project\core\features\combat\impl\extrapolation.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="project\core\features\misc\impl\scoreboard_weapons.cpp">
@@ -359,16 +262,10 @@
     <ClInclude Include="project\utilities\logging\logging.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="project\utilities\security\security.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="project\core\settings.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="project\core\features\world\world.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="project\core\features\movement\movement.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="project\core\features\misc\misc.hpp">
@@ -378,12 +275,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="project\utilities\animation.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="project\core\features\esp\esp.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="project\core\features\combat\combat.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="project\utilities\threadpool\threadpool.hpp">

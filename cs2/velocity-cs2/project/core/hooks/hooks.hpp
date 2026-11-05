@@ -120,22 +120,4 @@ namespace hooks {
 		inline static hooking::jmp m_log_internal{};
 	};
 
-	class vac
-	{
-	public:
-		vac( ) = delete;
-
-		static bool initialize( );
-		static void shutdown( );
-
-		static std::uint8_t __fastcall analyze_pe_module( std::uintptr_t module_base, std::uintptr_t out_info, char calculate_hash );
-		static void __fastcall build_diagnostic_response( std::intptr_t request, DWORD thread_id );
-		static std::intptr_t __fastcall string_copy( void* dest, const void* src, std::uintptr_t size );
-
-	private:
-		inline static hooking::jmp m_analyze_pe_module{};
-		inline static hooking::jmp m_build_diagnostic_response{};
-		inline static hooking::jmp m_string_copy{};
-	};
-
 } // namespace hooks
