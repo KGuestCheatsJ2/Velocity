@@ -18,26 +18,23 @@ jobs:
       - name: Setup MSBuild
         uses: microsoft/setup-msbuild@v2
 
-      - name: Find LLVM path
+      - name: Find LLVM version and path
         id: llvm
         shell: pwsh
         run: |
-          $clangcl = Get-Command clang-cl -ErrorAction SilentlyContinue
-          if ($clangcl) {
-            $llvmbin = Split-Path $clangcl.Source
-            echo "llvm_bin=$llvmbin" >> $env:GITHUB_OUTPUT
-            echo "Found clang-cl at: $llvmbin"
-          } else {
-            $paths = @("C:\Program Files\LLVM\bin", "C:\Program Files (x86)\LLVM\bin")
-            foreach ($p in $paths) {
-              if (Test-Path "$p\clang-cl.exe") {
-                echo "llvm_bin=$p" >> $env:GITHUB_OUTPUT
-                echo "Found at: $p"
-                break
-              }
-            }
-          }
-          clang-cl --version
+          $ver = (clang-cl --version 2>&1 | Select-String "clang version (\d+)").Matches[0].Groups[1].Value
+          echo "llvm_ver=$ver" >> $env:GITHUB_OUTPUT
+          $bin = Split-Path (Get-Command clang-cl).Source
+          echo "llvm_bin=$bin" >> $env:GITHUB_OUTPUT
+          echo "LLVM version: $ver, bin: $bin"
+
+      - name: Patch LLVMToolsVersion in vcxproj
+        shell: pwsh
+        run: |
+          $ver = "${{ steps.llvm.outputs.llvm_ver }}"
+          $file = "cs2/velocity-cs2/velocity-cs2.vcxproj"
+          (Get-Content $file) -replace '<LLVMToolsVersion>19</LLVMToolsVersion>', "<LLVMToolsVersion>$ver</LLVMToolsVersion>" | Set-Content $file
+          echo "Patched LLVMToolsVersion to $ver"
 
       - name: Build Development DLL
         working-directory: cs2/velocity-cs2
