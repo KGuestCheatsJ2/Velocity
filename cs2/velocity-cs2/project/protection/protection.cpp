@@ -1,3 +1,4 @@
+#include <pch/pch.hpp>
 #include "protection.hpp"
 #include <VMProtectSDK.h>
 

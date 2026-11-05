@@ -1,3 +1,4 @@
+#include <pch/pch.hpp>
 #include "../security.hpp"
 
 namespace security::prologues {

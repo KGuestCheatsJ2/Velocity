@@ -1,3 +1,4 @@
+#include <pch/pch.hpp>
 #include <protection/game_addresses.hpp>
 
 namespace patterns {

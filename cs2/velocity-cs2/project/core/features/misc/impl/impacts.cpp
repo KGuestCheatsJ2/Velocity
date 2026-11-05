@@ -1,3 +1,4 @@
+#include <pch/pch.hpp>
 #include <ShlObj.h>
 #include <filesystem>
 

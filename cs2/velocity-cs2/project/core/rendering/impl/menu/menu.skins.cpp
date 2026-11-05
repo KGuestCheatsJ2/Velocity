@@ -1,3 +1,4 @@
+#include <pch/pch.hpp>
 #include <core/features/features.hpp>
 #include <core/settings.hpp>
 

@@ -1,3 +1,4 @@
+#include <pch/pch.hpp>
 #include <core/settings.hpp>
 
 #include "../../rendering.hpp"

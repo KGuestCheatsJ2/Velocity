@@ -1,3 +1,4 @@
+#include <pch/pch.hpp>
 
 #include <utilities/logging/logging.hpp>
 #include <utilities/addresses/addresses.hpp>
