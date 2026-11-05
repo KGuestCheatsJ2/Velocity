@@ -3,6 +3,7 @@
 #include "xdraw.hpp"
 
 #include <wincodec.h>
+#include <array>
 #include <algorithm>
 #include <string>
 #include <numbers>
