@@ -222,7 +222,10 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Development|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Ship|x64'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="project\protection\protection.cpp" />
+        <ClCompile Include="project\protection\protection.cpp">
+      <ExcludedFromUnityBuild Condition="'$(Configuration)|$(Platform)'=='Development|x64'">true</ExcludedFromUnityBuild>
+      <ExcludedFromUnityBuild Condition="'$(Configuration)|$(Platform)'=='Ship|x64'">true</ExcludedFromUnityBuild>
+    </ClCompile>
     <ClCompile Include="project\protection\patterns.cpp" />
     <ClCompile Include="project\utilities\addresses\impl\functions.cpp" />
     <ClCompile Include="project\utilities\addresses\impl\globals.cpp" />
