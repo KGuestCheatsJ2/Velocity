@@ -1,4 +1,3 @@
-#include <pch/pch.hpp>
 #include <utilities/math/math.hpp>
 #include <core/settings.hpp>
 

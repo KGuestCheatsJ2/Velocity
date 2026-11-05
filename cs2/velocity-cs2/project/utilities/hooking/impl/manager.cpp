@@ -1,4 +1,3 @@
-#include <pch/pch.hpp>
 #include <utilities/security/security.hpp>
 #include <utilities/logging/logging.hpp>
 

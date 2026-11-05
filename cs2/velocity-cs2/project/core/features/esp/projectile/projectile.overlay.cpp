@@ -1,4 +1,3 @@
-#include <pch/pch.hpp>
 #include <utilities/memory/memory.hpp>
 #include <core/rendering/rendering.hpp>
 #include <core/settings.hpp>

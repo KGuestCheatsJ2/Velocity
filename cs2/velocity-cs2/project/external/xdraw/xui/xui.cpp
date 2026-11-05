@@ -1,5 +1,4 @@
 #define NOMINMAX
-#include <pch/pch.hpp>
 #include "xui.hpp"
 #include <algorithm>
 #include <chrono>

@@ -1,4 +1,3 @@
-#include <pch/pch.hpp>
 #include "math.hpp"
 
 namespace math {
