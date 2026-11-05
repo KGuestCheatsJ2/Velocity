@@ -137,11 +137,7 @@ namespace {
 		}
 
 		{
-			STAGE( "security::integrity::initialize" );
-			if ( !PROTECTION_CHECK( ) || !security::integrity::initialize( ) )
-			{
-				INIT_FAIL( "failed to initialize integrity checks." );
-			}
+			// module integrity cache removed: it only fed the disabled VAC hooks and called a stale game pattern (crash)
 
 			STAGE( "threadpool::initialize" );
 			if ( !PROTECTION_CHECK( ) || !threadpool::initialize( ) )
