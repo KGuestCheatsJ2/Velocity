@@ -15,39 +15,49 @@ jobs:
         with:
           submodules: recursive
 
+      - name: Install LLVM into Visual Studio
+        shell: pwsh
+        run: |
+          $vsPath = & "${env:ProgramFiles(x86)}\Microsoft Visual Studio\Installer\vswhere.exe" -latest -property installationPath
+          echo "VS Path: $vsPath"
+          # Get installed LLVM version
+          $llvmVer = (clang-cl --version 2>&1 | Select-String "clang version (\d+\.\d+\.\d+)").Matches[0].Groups[1].Value
+          $llvmMajor = $llvmVer.Split('.')[0]
+          echo "LLVM version: $llvmVer, major: $llvmMajor"
+          # Create symlink so MSBuild finds it
+          $src = "C:\Program Files\LLVM"
+          $dst = "$vsPath\VC\Tools\llvm\x64"
+          if (-not (Test-Path $dst)) { New-Item -ItemType Directory -Path $dst -Force }
+          # Copy clang libs into VS LLVM folder
+          $clangLibSrc = "C:\Program Files\LLVM\lib\clang"
+          $clangLibDst = "$vsPath\VC\Tools\llvm\x64\lib\clang"
+          if (Test-Path $clangLibSrc) {
+            Copy-Item -Path $clangLibSrc -Destination $clangLibDst -Recurse -Force
+          }
+          # Patch vcxproj to use detected version
+          $file = "cs2/velocity-cs2/velocity-cs2.vcxproj"
+          (Get-Content $file) -replace '<LLVMToolsVersion>19</LLVMToolsVersion>', "<LLVMToolsVersion>$llvmMajor</LLVMToolsVersion>" | Set-Content $file
+          echo "Patched vcxproj LLVMToolsVersion to $llvmMajor"
+          # Also set toolset path
+          $bin = Split-Path (Get-Command clang-cl).Source
+          echo "LLVM_BIN=$bin" >> $env:GITHUB_ENV
+          echo "LLVM_MAJOR=$llvmMajor" >> $env:GITHUB_ENV
+
       - name: Setup MSBuild
         uses: microsoft/setup-msbuild@v2
-
-      - name: Find LLVM version and path
-        id: llvm
-        shell: pwsh
-        run: |
-          $ver = (clang-cl --version 2>&1 | Select-String "clang version (\d+)").Matches[0].Groups[1].Value
-          echo "llvm_ver=$ver" >> $env:GITHUB_OUTPUT
-          $bin = Split-Path (Get-Command clang-cl).Source
-          echo "llvm_bin=$bin" >> $env:GITHUB_OUTPUT
-          echo "LLVM version: $ver, bin: $bin"
-
-      - name: Patch LLVMToolsVersion in vcxproj
-        shell: pwsh
-        run: |
-          $ver = "${{ steps.llvm.outputs.llvm_ver }}"
-          $file = "cs2/velocity-cs2/velocity-cs2.vcxproj"
-          (Get-Content $file) -replace '<LLVMToolsVersion>19</LLVMToolsVersion>', "<LLVMToolsVersion>$ver</LLVMToolsVersion>" | Set-Content $file
-          echo "Patched LLVMToolsVersion to $ver"
 
       - name: Build Development DLL
         working-directory: cs2/velocity-cs2
         shell: pwsh
         run: |
-          $llvmbin = "${{ steps.llvm.outputs.llvm_bin }}"
           msbuild velocity-cs2.vcxproj `
             /p:Configuration=Development `
             /p:Platform=x64 `
             /p:CLToolExe=clang-cl.exe `
-            /p:CLToolPath="$llvmbin" `
+            /p:CLToolPath="$env:LLVM_BIN" `
             /p:LinkToolExe=lld-link.exe `
-            /p:LinkToolPath="$llvmbin" `
+            /p:LinkToolPath="$env:LLVM_BIN" `
+            /p:LLVMInstallDir="C:\Program Files\LLVM" `
             /m /v:minimal
 
       - name: Find output DLL
