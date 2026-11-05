@@ -4,7 +4,10 @@
 #include <wrl/client.h>
 #include <d3d11.h>
 
+#include <array>
 #include <cstdint>
+#include <string>
+#include <memory>
 #include <vector>
 #include <unordered_map>
 #include <span>
