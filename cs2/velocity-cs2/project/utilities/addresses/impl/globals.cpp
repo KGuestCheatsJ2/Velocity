@@ -70,10 +70,23 @@ namespace addresses::globals {
 			swap_chain = memory::read<std::uintptr_t> (second + 0x170);
 		}
 
+		// patterns that went stale after a game update only disable the feature that needs them
+		// (weather: particle_manager, skin changer: item_system, game events: game_event_manager)
+		const struct { const char* name; std::uintptr_t value; } optional_globals[] {
+			{ "particle_manager", particle_manager }, { "game_event_manager", game_event_manager },
+			{ "weapon_recoil_data", weapon_recoil_data }, { "simulation_player", simulation_player },
+			{ "planted_c4", planted_c4 }, { "item_system", item_system },
+		};
+		for (const auto& g : optional_globals) {
+			if (!g.value) {
+				logging::console::print ("[globals] optional global '{}' not found, related feature disabled", g.name);
+			}
+		}
+
 		if (
-			!csgo_input || !entity_list || !local_player_controller || !global_vars || !view_matrix || !game_rules || !light_data_queue || !particle_manager ||
-			!game_event_manager || !game_trace_manager || !render_game_system || !mem_alloc || !swap_chain || !material_manager || !game_entity_system ||
-			!weapon_recoil_data || !hud || !prediction_seed || !simulation_player || !prediction_player || !planted_c4 || !item_system || !net_client ||
+			!csgo_input || !entity_list || !local_player_controller || !global_vars || !view_matrix || !game_rules || !light_data_queue ||
+			!game_trace_manager || !render_game_system || !mem_alloc || !swap_chain || !material_manager || !game_entity_system ||
+			!hud || !prediction_seed || !prediction_player || !net_client ||
 			!frame_input_ring_idx || !frame_input_ring_base || !prediction_state
 			) {
 			return false;

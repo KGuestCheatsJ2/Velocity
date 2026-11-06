@@ -45,7 +45,7 @@ namespace features::world {
 
 	void weather::create_particle( )
 	{
-		const auto particle_manager = memory::read<std::uintptr_t>( addresses::globals::particle_manager );
+		const auto particle_manager = addresses::globals::particle_manager ? memory::read<std::uintptr_t>( addresses::globals::particle_manager ) : 0ull;
 		if ( !particle_manager )
 		{
 			return;
@@ -116,7 +116,7 @@ namespace features::world {
 			}
 		}
 
-		const auto particle_manager = memory::read<std::uintptr_t>( addresses::globals::particle_manager );
+		const auto particle_manager = addresses::globals::particle_manager ? memory::read<std::uintptr_t>( addresses::globals::particle_manager ) : 0ull;
 		const auto view_pawn = systems::g_local.get( ).view_pawn( );
 
 		if ( !view_pawn || !particle_manager )
@@ -144,7 +144,7 @@ namespace features::world {
 			return;
 		}
 
-		const auto particle_manager = memory::read<std::uintptr_t>( addresses::globals::particle_manager );
+		const auto particle_manager = addresses::globals::particle_manager ? memory::read<std::uintptr_t>( addresses::globals::particle_manager ) : 0ull;
 		if ( particle_manager )
 		{
 			memory::call<void>(PATTERN (patterns::particle_destroy_effect), particle_manager, this->m_effect_index, true, true );

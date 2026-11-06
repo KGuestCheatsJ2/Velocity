@@ -8,6 +8,11 @@ namespace features::changer {
 
 	bool econ_item_system::initialize( )
 	{
+		if ( !addresses::globals::item_system )
+		{
+			return false;
+		}
+
 		const auto system = memory::read<std::uintptr_t>( addresses::globals::item_system );
 		if ( !system )
 		{

@@ -9,6 +9,12 @@ namespace systems {
 
 	bool events::initialize( )
 	{
+		if ( !addresses::globals::game_event_manager )
+		{
+			// pattern is stale after a game update: run without game event listeners
+			return true;
+		}
+
 		if ( !register_listener( xs( "round_start" ), [ ]( void* event ) { features::misc::g_other.on_round_start( ); } ) )
 		{
 			return false;
@@ -24,6 +30,12 @@ namespace systems {
 
 	void events::shutdown( )
 	{
+		if ( !addresses::globals::game_event_manager )
+		{
+			m_listeners.clear( );
+			return;
+		}
+
 		for ( auto& entry : m_listeners )
 		{
 			if ( entry->registered )
@@ -38,7 +50,7 @@ namespace systems {
 
 	bool events::register_listener( const char* event_name, handler_fn handler )
 	{
-		if ( !event_name || !handler )
+		if ( !event_name || !handler || !addresses::globals::game_event_manager )
 		{
 			return false;
 		}
@@ -69,7 +81,7 @@ namespace systems {
 
 	void events::unregister_listener( const char* event_name )
 	{
-		if ( !event_name )
+		if ( !event_name || !addresses::globals::game_event_manager )
 		{
 			return;
 		}

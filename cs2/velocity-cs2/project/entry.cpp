@@ -211,7 +211,7 @@ namespace {
 			STAGE( "PROTECTION_CHECK" );
 			if ( !PROTECTION_CHECK( ) || !features::changer::g_econ_item_system.initialize( ) )
 			{
-				INIT_FAIL( "failed to initialize econ item system." );
+				INIT_WARN( "failed to initialize econ item system (skin changer unavailable)." );
 			}
 		}
 
