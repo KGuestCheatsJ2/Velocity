@@ -58,19 +58,33 @@ namespace addresses::globals {
 				return false;
 			}
 
-			const auto first = memory::read<std::uintptr_t> (storage);
-			if (!first) {
-				logging::console::print ("[globals] swap chain: first pointer is null");
-				return false;
+			// the swap chain only exists once the game has created its render device; when injected early
+			// the pointer chain is still empty, so wait for it (up to ~2 minutes) instead of failing
+			auto logged_wait = false;
+			for (auto attempt = 0; attempt < 480; ++attempt) {
+				const auto first = memory::read<std::uintptr_t> (storage);
+				if (first) {
+					const auto second = memory::read<std::uintptr_t> (first);
+					if (second) {
+						swap_chain = memory::read<std::uintptr_t> (second + 0x170);
+						if (swap_chain) {
+							break;
+						}
+					}
+				}
+
+				if (!logged_wait) {
+					logging::console::print ("[globals] waiting for the swap chain to be created...");
+					logged_wait = true;
+				}
+
+				Sleep (250);
 			}
 
-			const auto second = memory::read<std::uintptr_t> (first);
-			if (!second) {
-				logging::console::print ("[globals] swap chain: second pointer is null");
+			if (!swap_chain) {
+				logging::console::print ("[globals] swap chain still not available after waiting");
 				return false;
 			}
-
-			swap_chain = memory::read<std::uintptr_t> (second + 0x170);
 		}
 
 		// patterns that went stale after a game update only disable the feature that needs them
