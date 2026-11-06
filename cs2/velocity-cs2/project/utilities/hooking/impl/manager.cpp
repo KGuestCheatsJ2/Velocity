@@ -9,6 +9,13 @@ namespace hooking::manager {
 	{
 		for ( const auto& entry : entries )
 		{
+			if ( !entry.address )
+			{
+				// pattern went stale after a game update: skip this hook, the rest keeps working
+				logging::console::print( xs( "skipping hook (address not found): {}" ), entry.name );
+				continue;
+			}
+
 			if ( !entry.hook->create( reinterpret_cast< void* >( entry.address ), entry.detour ) )
 			{
 				logging::console::print( xs( "failed to hook: {}" ), entry.name );

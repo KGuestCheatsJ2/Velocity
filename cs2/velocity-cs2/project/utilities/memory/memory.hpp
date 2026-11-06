@@ -45,12 +45,37 @@ namespace memory {
 	template <typename T, typename... args_t>
 	inline T call( std::uintptr_t address, args_t... args )
 	{
+		// a pattern that went stale after a game update resolves to 0: do nothing instead of crashing the game
+		if ( !address )
+		{
+			if constexpr ( std::is_void_v<T> )
+			{
+				return;
+			}
+			else
+			{
+				return T{};
+			}
+		}
+
 		return reinterpret_cast< T( __fastcall* )( args_t... ) >( address )( args... );
 	}
 
 	template <typename T, typename... args_t>
 	inline T call_vfunc( std::uintptr_t instance, std::size_t index, args_t... args )
 	{
+		if ( !instance )
+		{
+			if constexpr ( std::is_void_v<T> )
+			{
+				return;
+			}
+			else
+			{
+				return T{};
+			}
+		}
+
 		const auto vtable = *reinterpret_cast< std::uintptr_t* >( instance );
 		const auto func = *reinterpret_cast< std::uintptr_t* >( vtable + index * sizeof( std::uintptr_t ) );
 
