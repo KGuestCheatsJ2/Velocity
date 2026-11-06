@@ -67,6 +67,27 @@ namespace systems {
 			this->m_hash_to_name[ hash ] = name;
 		}
 
+		// <steam library>\...\Counter-Strike Global Offensive\game\bin\win64\cs2.exe -> ...\game\csgo\pak01_dir.vpk
+		{
+			char exe[ MAX_PATH ]{};
+			if ( GetModuleFileNameA( nullptr, exe, MAX_PATH ) )
+			{
+				std::string exe_path{ exe };
+				std::string lower{ exe_path };
+				std::transform( lower.begin( ), lower.end( ), lower.begin( ), [ ]( unsigned char c ) { return static_cast< char >( std::tolower( c ) ); } );
+
+				const auto marker = lower.find( "\\game\\bin\\" );
+				if ( marker != std::string::npos )
+				{
+					const auto vpk = exe_path.substr( 0, marker ) + "\\game\\csgo\\pak01_dir.vpk";
+					if ( this->load_vpk_directory( vpk ) )
+					{
+						return true;
+					}
+				}
+			}
+		}
+
 		static const char* search_paths[ ]
 		{
 			"C:\\Program Files (x86)\\Steam\\steamapps\\common\\Counter-Strike Global Offensive\\game\\csgo\\pak01_dir.vpk",

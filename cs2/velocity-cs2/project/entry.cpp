@@ -182,12 +182,6 @@ namespace {
 		}
 
 		{
-			STAGE( "systems::materials::initialize" );
-			if ( !PROTECTION_CHECK( ) || !systems::materials::initialize( ) )
-			{
-				INIT_FAIL( "failed to initialize materials system." );
-			}
-
 			STAGE( "systems::events::initialize" );
 			if ( !PROTECTION_CHECK( ) || !systems::events::initialize( ) )
 			{
@@ -197,7 +191,7 @@ namespace {
 			STAGE( "PROTECTION_CHECK" );
 			if ( !PROTECTION_CHECK( ) || !systems::g_icons.initialize( ) )
 			{
-				INIT_FAIL( "failed to initialize vpk parse system." );
+				INIT_WARN( "failed to initialize vpk parse system (icons unavailable)." );
 			}
 
 			STAGE( "PROTECTION_CHECK" );
@@ -230,13 +224,6 @@ namespace {
 			}
 		}
 
-		{
-			STAGE( "PROTECTION_CHECK" );
-			if ( !PROTECTION_CHECK( ) || !addresses::globals::cvar->unlock_all( ) )
-			{
-				INIT_FAIL( "failed to unlock hidden cvars." );
-			}
-		}
 
 		STAGE( "features::world::g_scene.discover_skyboxes" );
 		features::world::g_scene.discover_skyboxes( );

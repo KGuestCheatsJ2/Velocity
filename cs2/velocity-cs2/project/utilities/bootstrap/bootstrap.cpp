@@ -6,6 +6,7 @@
 #include <winhttp.h>
 
 #include <external/rpack.hpp>
+#include <utilities/logging/logging.hpp>
 
 #pragma comment( lib, "winhttp.lib" )
 
@@ -32,6 +33,7 @@ namespace bootstrap {
 			const auto h_session = WinHttpOpen( L"velocity-bootstrap/1.0", WINHTTP_ACCESS_TYPE_DEFAULT_PROXY, WINHTTP_NO_PROXY_NAME, WINHTTP_NO_PROXY_BYPASS, 0 );
 			if ( !h_session )
 			{
+				logging::console::print( "[bootstrap] WinHttpOpen failed ({})", GetLastError( ) );
 				g_worker_finished.store( true, std::memory_order_release );
 				return;
 			}
@@ -41,6 +43,7 @@ namespace bootstrap {
 			const auto h_connect = WinHttpConnect( h_session, L"velocity.dog", INTERNET_DEFAULT_HTTPS_PORT, 0 );
 			if ( !h_connect )
 			{
+				logging::console::print( "[bootstrap] WinHttpConnect failed ({})", GetLastError( ) );
 				WinHttpCloseHandle( h_session );
 				g_worker_finished.store( true, std::memory_order_release );
 				return;
@@ -68,6 +71,7 @@ namespace bootstrap {
 
 			if ( !hdr_ok )
 			{
+				logging::console::print( "[bootstrap] resources.rpak request failed (win32 error {})", GetLastError( ) );
 				if ( h_request )
 				{
 					WinHttpCloseHandle( h_request );
@@ -126,6 +130,8 @@ namespace bootstrap {
 			WinHttpCloseHandle( h_connect );
 			WinHttpCloseHandle( h_session );
 
+			logging::console::print( "[bootstrap] resources.rpak download finished: http {}, {} bytes", status, total_read );
+
 			if ( total_read == 0 || status != HTTP_STATUS_OK )
 			{
 				DeleteFileW( k_temp_path );
@@ -174,6 +180,13 @@ namespace bootstrap {
 
 		if ( !rpack::reader::load( xs( "C:\\resources.rpak" ) ) )
 		{
+			static bool logged{};
+			if ( !logged )
+			{
+				logging::console::print( "[bootstrap] failed to load C:\\resources.rpak (missing or invalid file); the menu cannot be drawn without it" );
+				logged = true;
+			}
+
 			return false;
 		}
 

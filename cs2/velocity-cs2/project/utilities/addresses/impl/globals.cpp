@@ -51,41 +51,7 @@ namespace addresses::globals {
 		if (const auto ptr = MODULE_EXPORT("tier0.dll:g_pMemAlloc"))
 			mem_alloc = *reinterpret_cast<std::uintptr_t*>(ptr);
 
-		{
-			const auto storage = PATTERN (patterns::swap_chain_storage);
-			if (!storage) {
-				logging::console::print ("[globals] swap_chain_storage pattern not found");
-				return false;
-			}
-
-			// the swap chain only exists once the game has created its render device; when injected early
-			// the pointer chain is still empty, so wait for it (up to ~2 minutes) instead of failing
-			auto logged_wait = false;
-			for (auto attempt = 0; attempt < 480; ++attempt) {
-				const auto first = memory::read<std::uintptr_t> (storage);
-				if (first) {
-					const auto second = memory::read<std::uintptr_t> (first);
-					if (second) {
-						swap_chain = memory::read<std::uintptr_t> (second + 0x170);
-						if (swap_chain) {
-							break;
-						}
-					}
-				}
-
-				if (!logged_wait) {
-					logging::console::print ("[globals] waiting for the swap chain to be created...");
-					logged_wait = true;
-				}
-
-				Sleep (250);
-			}
-
-			if (!swap_chain) {
-				logging::console::print ("[globals] swap chain still not available after waiting");
-				return false;
-			}
-		}
+		// swap chain: Present/ResizeBuffers are resolved in addresses::functions via a temporary device (no pattern)
 
 		// patterns that went stale after a game update only disable the feature that needs them
 		// (weather: particle_manager, skin changer: item_system, game events: game_event_manager)
@@ -104,7 +70,7 @@ namespace addresses::globals {
 			{ "csgo_input", csgo_input }, { "entity_list", entity_list }, { "local_player_controller", local_player_controller },
 			{ "global_vars", global_vars }, { "view_matrix", view_matrix }, { "game_rules", game_rules },
 			{ "light_data_queue", light_data_queue }, { "game_trace_manager", game_trace_manager },
-			{ "render_game_system", render_game_system }, { "mem_alloc", mem_alloc }, { "swap_chain", swap_chain },
+			{ "render_game_system", render_game_system }, { "mem_alloc", mem_alloc },
 			{ "material_manager", material_manager }, { "game_entity_system", game_entity_system }, { "hud", hud },
 			{ "prediction_seed", prediction_seed }, { "prediction_player", prediction_player }, { "net_client", net_client },
 			{ "frame_input_ring_idx", frame_input_ring_idx }, { "frame_input_ring_base", frame_input_ring_base },

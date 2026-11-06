@@ -19,12 +19,13 @@ namespace hooking::manager {
 			if ( !entry.hook->create( reinterpret_cast< void* >( entry.address ), entry.detour ) )
 			{
 				logging::console::print( xs( "failed to hook: {}" ), entry.name );
-				return false;
+				continue;
 			}
 
 			if ( !entry.hook->enable( ) )
 			{
-				return false;
+				logging::console::print( xs( "failed to enable hook: {}" ), entry.name );
+				continue;
 			}
 
 		}
