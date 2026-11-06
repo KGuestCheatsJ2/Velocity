@@ -253,6 +253,7 @@ extern "C" int __stdcall entry( HMODULE module_handle, DWORD reason, LPVOID rese
 #if defined( DEV )
 		AddVectoredExceptionHandler( 1, crash_logger );
 		STAGE( "dll attach" );
+		init_log( "build: " __DATE__ " " __TIME__ );
 #endif
 		DisableThreadLibraryCalls( module_handle );
 
